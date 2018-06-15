@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,7 +32,9 @@ public class WordComparatorScreen {
 	private JTextField location1;
 	private JLabel headerLabel2;
 	private JLabel headerLabel3;
+	private JLabel headerLabel4;
 	private JTextArea result1;
+	private JTextArea result2;
 
    public static void main(String[] args) {
 	   WordComparatorScreen wcs= new WordComparatorScreen();
@@ -53,33 +56,43 @@ public class WordComparatorScreen {
 		headerLabel2.setText("The text read from the first doc is in the below textField");
 		headerLabel3 = new JLabel("", JLabel.CENTER);
 		headerLabel3.setText("The text read from the second doc is in the below textField");
+		headerLabel4 = new JLabel("", JLabel.CENTER);
+		headerLabel4.setText("Differneces are disaplyed in the below text");
 		statusLabel = new JLabel("", JLabel.CENTER);
 		location = new JTextField();
 		location1 = new JTextField();
 		result = new JTextArea();
 		result1 = new JTextArea();
+		result2 = new JTextArea();
 		mainFrame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent windowEvent) {
 				System.exit(0);
 			}
 		});
 		submit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {				
+			public void actionPerformed(ActionEvent e) {	
+				statusLabel.setText(" ");
                 String doclocation1 = location.getText().replace("\\", "\\\\");
                 String doclocation2 = location1.getText().replace("\\", "\\\\");
                 System.out.println(doclocation1);
                 System.out.println(doclocation2);
                 CompareWord cw = new CompareWord();
-                String temp;
+                List<String> temp;
 				try {
 					temp = cw.compareWord(doclocation1, doclocation2);
-	                statusLabel.setText(temp);
+					StringBuffer temp1 = new StringBuffer();
+					System.out.println("temp"+temp);
+					for(String str : temp) {
+						temp1.append( str);
+					}
+					result2.setText(temp1.toString());
 	                result.setText(cw.doc1Text(doclocation1));
 	                result1.setText(cw.doc2Text(doclocation2));
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 					statusLabel.setText(e1.toString());
+					result2.setText(e1.toString());
 				}
 			}
 		});
@@ -91,6 +104,8 @@ public class WordComparatorScreen {
 		mainFrame.add(result);
 		mainFrame.add(headerLabel3);
 		mainFrame.add(result1);
+		mainFrame.add(headerLabel4);
+		mainFrame.add(result2);
 		mainFrame.add(statusLabel);
 		mainFrame.add(submit);		
 		mainFrame.setVisible(true);

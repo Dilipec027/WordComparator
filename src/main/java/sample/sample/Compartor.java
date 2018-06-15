@@ -1,8 +1,8 @@
-//package sample.sample;
+package sample.sample;
 //
 //import java.io.*;
 //import org.apache.commons.io.FileUtils;
-//public class Compartor {
+public class Compartor {
 //	
 //  public static void main(String[] args) {
 //      /* Get the files to be compared first */
@@ -17,5 +17,5 @@
 //		}
 //      System.out.println("Are the files same? " + compareResult);
 //  }
-//}
+}
 

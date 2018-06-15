@@ -1,4 +1,4 @@
-//package sample.sample;
+package sample.sample;
 //import org.apache.poi.poifs.filesystem.*;
 //import org.apache.poi.hpsf.DocumentSummaryInformation;
 //import org.apache.poi.hwpf.*;
@@ -7,7 +7,7 @@
 //
 //import java.io.*;
 //
-//public class ReadDocFileFromJava {
+public class ReadDocFileFromJava {
 //
 //    public static void main(String[] args) {
 //        /**This is the document that you want to read using Java.**/
@@ -92,4 +92,4 @@
 //
 //    }
 //
-//}
+}
