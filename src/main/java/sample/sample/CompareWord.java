@@ -28,7 +28,7 @@ public class CompareWord {
 
 		// using XWPFWordExtractor Class
 		XWPFWordExtractor we1 = new XWPFWordExtractor(docx1);
-		String temp1 = we1.getText();
+		String temp1 = we1.getText();		
 		if (temp.equalsIgnoreCase(temp1))
 			System.out.println("Both are Equal");
 		we1.close();
