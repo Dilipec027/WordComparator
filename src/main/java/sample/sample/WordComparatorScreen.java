@@ -19,6 +19,8 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -35,6 +37,9 @@ public class WordComparatorScreen {
 	private JLabel headerLabel4;
 	private JTextArea result1;
 	private JTextArea result2;
+	private JScrollPane scroll;
+	private JScrollPane scroll1;
+	private JScrollPane scroll2;
 
    public static void main(String[] args) {
 	   WordComparatorScreen wcs= new WordComparatorScreen();
@@ -45,7 +50,7 @@ public class WordComparatorScreen {
 	public void indexscreen() {
 		final JFrame mainFrame = new JFrame("Word Comparator");
 		mainFrame.setSize(800, 800);
-		mainFrame.setLayout(new GridLayout(18, 1));
+		mainFrame.setLayout(new GridLayout(12, 1));
 		
 		submit = new JButton("submit");		
 		headerLabel = new JLabel("", JLabel.CENTER);
@@ -61,9 +66,12 @@ public class WordComparatorScreen {
 		statusLabel = new JLabel("", JLabel.CENTER);
 		location = new JTextField();
 		location1 = new JTextField();
-		result = new JTextArea();
+		result = new JTextArea();		
 		result1 = new JTextArea();
 		result2 = new JTextArea();
+		scroll1 =  new JScrollPane(result1);
+		scroll2 =  new JScrollPane(result2);
+		scroll =  new JScrollPane(result);
 		mainFrame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent windowEvent) {
 				System.exit(0);
@@ -101,12 +109,15 @@ public class WordComparatorScreen {
 		mainFrame.add(headerLabel1);
 		mainFrame.add(location1);
 		mainFrame.add(headerLabel2);
-		mainFrame.add(result);
+//		mainFrame.add(result);
+		mainFrame.add(scroll);
 		mainFrame.add(headerLabel3);
-		mainFrame.add(result1);
+//		mainFrame.add(result1);
+		mainFrame.add(scroll1);
 		mainFrame.add(headerLabel4);
-		mainFrame.add(result2);
-		mainFrame.add(statusLabel);
+//		mainFrame.add(result2);
+		mainFrame.add(scroll2);
+		mainFrame.add(statusLabel);		
 		mainFrame.add(submit);		
 		mainFrame.setVisible(true);
 	}
