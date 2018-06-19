@@ -84,18 +84,21 @@ public class WordComparatorScreen {
                 String doclocation2 = location1.getText().replace("\\", "\\\\");
                 System.out.println(doclocation1);
                 System.out.println(doclocation2);
-                CompareWord cw = new CompareWord();
+                
+//                CompareWord cw = new CompareWord();
+                ExtractDatafromTable cw = new ExtractDatafromTable();
                 List<String> temp;
 				try {
-					temp = cw.compareWord(doclocation1, doclocation2);
+//					temp = cw.compareWord(doclocation1, doclocation2);
+					temp = cw.wordCompare(doclocation1, doclocation2);
 					StringBuffer temp1 = new StringBuffer();
 					System.out.println("temp"+temp);
 					for(String str : temp) {
 						temp1.append( str);
 					}
 					result2.setText(temp1.toString());
-	                result.setText(cw.doc1Text(doclocation1));
-	                result1.setText(cw.doc2Text(doclocation2));
+//	                result.setText(cw.doc1Text(doclocation1));
+//	                result1.setText(cw.doc2Text(doclocation2));
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -108,12 +111,12 @@ public class WordComparatorScreen {
 		mainFrame.add(location);
 		mainFrame.add(headerLabel1);
 		mainFrame.add(location1);
-		mainFrame.add(headerLabel2);
+//		mainFrame.add(headerLabel2);
 //		mainFrame.add(result);
-		mainFrame.add(scroll);
-		mainFrame.add(headerLabel3);
+//		mainFrame.add(scroll);
+//		mainFrame.add(headerLabel3);
 //		mainFrame.add(result1);
-		mainFrame.add(scroll1);
+//		mainFrame.add(scroll1);
 		mainFrame.add(headerLabel4);
 //		mainFrame.add(result2);
 		mainFrame.add(scroll2);

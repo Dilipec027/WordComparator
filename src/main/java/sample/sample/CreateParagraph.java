@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.impl.values.XmlAnyTypeImpl;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTTextBodyProperties;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
@@ -86,7 +88,7 @@ public class CreateParagraph {
    }*/
 	   
 	   
-	   File file = new File("\\\\global.scd.scania.com\\home\\Se\\080\\dmuhbr\\Desktop\\New folder\\test7.docx");
+	   File file = new File("\\\\global.scd.scania.com\\home\\Se\\080\\dmuhbr\\Desktop\\New folder\\test8.docx");
 	   FileInputStream fis = new FileInputStream(file.getAbsolutePath());
 
 	   XWPFDocument document = new XWPFDocument(fis);
@@ -96,6 +98,7 @@ public class CreateParagraph {
 	   for (XWPFParagraph para : paragraphs) {
 	       XWPFStyle style = document.getStyles().getStyle(para.getStyleID());
 	       System.out.println(para.getText());
+	       System.out.println(style);
 	       int pos = 0;
 	       for (XWPFRun run : para.getRuns()) {
 	         System.out.println("Current run IsBold : " + run.isBold());
@@ -146,7 +149,8 @@ public class CreateParagraph {
                             for (XWPFTableRow xwpfiTableRow : irow) { 
                                 List<XWPFTableCell> icell = xwpfiTableRow.getTableCells(); 
                                 for (XWPFTableCell xwpfiTableCell : icell) { 
-                                    if(xwpfiTableCell!=null){   
+                                    if(xwpfiTableCell!=null){ 
+                                    	System.out.println("inside the cell"+xwpfiTableCell.getText());
                                     } 
                                 } 
                             } 
@@ -156,6 +160,7 @@ public class CreateParagraph {
             }
         } 
     }
+    
 	    
     CTBody ctbody = document.getDocument().getBody();
 
@@ -192,6 +197,7 @@ public class CreateParagraph {
         for (CTR cTR : cTP.getRList()) {
          for (CTText cTText : cTR.getTList()) {
           tableHTML.append(cTText.getStringValue());
+          System.out.println();
          }
         }
        }
@@ -206,7 +212,117 @@ public class CreateParagraph {
     } 
     
     
-    
+    List<XWPFTableRow> xWPFTableRow = new ArrayList<XWPFTableRow>();
+    List<XWPFTableCell> xWPFTablecell = new ArrayList<XWPFTableCell>();
+    List<XWPFTableRow> zeile = new ArrayList<XWPFTableRow>();
+	List<XWPFTable> table1 = document.getTables();
+	for(XWPFTable table2:table1) {
+		zeile.addAll(table2.getRows());
+	}
+	for(int i1 =0;i< zeile.size();i++) {		
+		xWPFTablecell =zeile.get(i1).getTableCells();
+	}
+	for(XWPFTableCell  cell :xWPFTablecell ) {
+//		System.out.println(cell.getText());
+//		System.out.println(cell.getColor());
+//		System.out.println(cell.getTextRecursively());
+//		System.out.println(cell.getParagraphs().get(0));
+		List<XWPFParagraph>paragraphs1 =cell.getParagraphs();
+		for (XWPFParagraph para : paragraphs1) {
+		       XWPFStyle style = document.getStyles().getStyle(para.getStyleID());
+		       System.out.println(para.getText());
+		       System.out.println(style);
+		       int pos = 0;
+		       for (XWPFRun run : para.getRuns()) {
+		         System.out.println("Current run IsBold : " + run.isBold());
+		         System.out.println("Current run IsItalic : " + run.isItalic());
+		         System.out.println("Current Font Size : " + run.getFontSize());
+		         System.out.println("Current Font Name : " + run.getFontName());
+		       }
+		
+//		document.getStyles().getStyle(para.getStyleID());
+	}
+	
+	}
+	   
+//   List<XWPFTableRow> zeile = table1.getRows();
+   System.out.println("Inside the row");
+//    xWPFTableRow = document.getTables().get(0).getRow(1);
+//    System.out.println(xWPFTableRow.getCell(1).getColor());
+//    System.out.println(xWPFTableRow.getCell(1).getText());
+//    System.out.println(xWPFTableRow.getCell(1).getBodyElements().get(1).getElementType());
 	     fis.close();
-   }
+   }  
+   
+     
 }
+
+// to get row data
+/*private void adText2Table(XWPFDocument doc, String text, int row, int cell, int tableIdx) {
+	           XWPFTableRow xWPFTableRow;
+	           XWPFTable table = doc.getTables().get(tableIdx);
+	           List<XWPFTableRow> zeile = table.getRows();
+	    
+	           if (zeile.size() >= row + 1) {
+	               xWPFTableRow = zeile.get(row);
+	           } else {
+	               xWPFTableRow = doc.getTables().get(tableIdx).createRow();
+	           }
+	    
+	           xWPFTableRow.getCell(cell).setText(text);
+	       }
+ 
+*/
+
+/*
+//    public static string TextFromWord(string filename)
+{
+    StringBuilder textBuilder = new StringBuilder();
+    using (WordprocessingDocument wDoc = WordprocessingDocument.Open(filename, false))
+    {
+        var parts = wDoc.MainDocumentPart.Document.Descendants().FirstOrDefault();
+        if (parts != null)
+        {
+            foreach (var node in parts.ChildElements)
+            {
+                if(node is Paragraph)
+                {
+                    ProcessParagraph((Paragraph)node, textBuilder);
+                    textBuilder.AppendLine("");
+                }
+
+                if (node is Table)
+                {
+                    ProcessTable((Table)node, textBuilder);
+                }
+            }
+        }
+    }
+    return textBuilder.ToString();
+}
+
+private static void ProcessTable(Table node, StringBuilder textBuilder)
+{
+    foreach (var row in node.Descendants<TableRow>())
+    {
+        textBuilder.Append("| ");
+        foreach (var cell in row.Descendants<TableCell>())
+        {
+            foreach (var para in cell.Descendants<Paragraph>())
+            {
+                ProcessParagraph(para, textBuilder);
+            }
+            textBuilder.Append(" | ");
+        }
+        textBuilder.AppendLine("");
+    }
+}
+
+private static void ProcessParagraph(Paragraph node, StringBuilder textBuilder)
+{
+    foreach(var text in node.Descendants<Text>())
+    {
+        textBuilder.Append(text.InnerText);
+    }
+}
+*/
