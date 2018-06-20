@@ -224,6 +224,15 @@ public class ExtractDatafromTable {
 
 	public void picComparator() throws IOException {
 
+//		HWPFDocument docB = new HWPFDocument(fileInputStream);
+//        PicturesTable picB = onedocument.getPicturesTable();
+//        List picturesB = picB.getAllPictures();
+//        for (Object o : picturesB) {
+//            Picture pic = (Picture) o;
+//            int height = pic.getHeight();
+//            int width = pic.getWidht();
+        
+		
 		List<XWPFPictureData> onepiclist = onedocument.getAllPictures();
 		List<XWPFPictureData> otherpiclist = otherdocument.getAllPictures();
 
@@ -241,11 +250,20 @@ public class ExtractDatafromTable {
 				byte[] otherpic = otherpiclist.get(j).getData();
 				System.out.println("first pic" + onepic.toString());
 				System.out.println("second pic" + otherpic.toString());
-				if (Arrays.equals(onepic, otherpic)) {
+				
+				if (Arrays.equals(onepic, otherpic)) {					
+//					BufferedImage imag = ImageIO.read(new ByteArrayInputStream(onepic));
+//					ImageIO.write(imag, "jpg", new File("target\\imagefromword" + i + ".jpg"));
+//					System.out.println("Image is created");
+//					
+//					BufferedImage imag1 = ImageIO.read(new ByteArrayInputStream(otherpic));
+//					ImageIO.write(imag1, "jpg", new File("target\\imagefromword" + i+i + ".jpg"));
+//					System.out.println("Image is created");
 					break;
 				}
 			}
-			if (temp == otherpiclist.size()) {
+			
+			if (temp == (otherpiclist.size()-1)){
 				BufferedImage imag = ImageIO.read(new ByteArrayInputStream(onepic));
 				ImageIO.write(imag, "jpg", new File("target\\imagefromword" + i + ".jpg"));
 				System.out.println("Image is created");
