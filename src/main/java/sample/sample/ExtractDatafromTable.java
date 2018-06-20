@@ -77,7 +77,6 @@ public class ExtractDatafromTable {
 
 			if (mismatch.isEmpty()) {
 				mismatch.add("Documents are equal");
-
 				return mismatch;
 			}
 		} catch (java.lang.IndexOutOfBoundsException e) {
@@ -142,14 +141,21 @@ public class ExtractDatafromTable {
 						+ oneparagraphs.get(i).getRuns().size() + eol + "Paragraphlines in second doc:"
 						+ otherparagraphs.get(i).getRuns().size() + eol + "Paragrpah text in first doc:" + eol
 						+ oneparagraphs.get(i).getText() + eol + "Paragraph text in second doc:" + eol
-						+ otherparagraphs.get(i).getText() + eol);
+						+ otherparagraphs.get(i).getText() + eol + eol
+						+ "Mismatch migh be due to some text is bold/Italic/Fontsizemismatch/FontNamemismatch/Underlinedmismtach"
+						+ eol+eol);
 
 			} else {
+
 				List<XWPFRun> onerun = oneparagraphs.get(i).getRuns();
 				List<XWPFRun> otherrun = otherparagraphs.get(i).getRuns();
-				int pos = 0;
 
-				for (int j = 0; j < onerun.size(); j++) {
+				int pos = 0;
+				int temp = otherrun.size();
+				if (onerun.size() < otherrun.size())
+					temp = onerun.size(); // this will avoid the array index out of boundary, when if else condition is
+											// removed
+				for (int j = 0; j < temp; j++) {
 					pos = 1 + pos;
 					System.out.println("Paragraph Line number in first doc:" + pos);
 					System.out.println("Paragraph Line number in second doc:" + pos);
@@ -161,21 +167,24 @@ public class ExtractDatafromTable {
 					System.out.println("Current Font Size : " + otherrun.get(j).getFontSize());
 					System.out.println("Current Font Name : " + onerun.get(j).getFontName());
 					System.out.println("Current Font Name : " + otherrun.get(j).getFontName());
+					System.out.println("Current text underline:" + onerun.get(j).getUnderline());
+					System.out.println("Current text underline:" + otherrun.get(j).getUnderline());
 
 					if (onerun.get(j).isBold() != otherrun.get(j).isBold()) {
 
 						mismatch.add("Paragraph Line is not Bold in both document" + eol
-								+ "Paragrpah is Bold in first doc" + onerun.get(j).isBold() + eol
-								+ "Paragraph is Bold in second doc" + otherrun.get(j).isBold() + eol + "Paragrpah text:"
-								+ otherparagraphs.get(i).getText() + eol + "Line number mismtached" + pos + eol);
+								+ "Paragrpah is Bold in first doc :" + onerun.get(j).isBold() + eol
+								+ "Paragraph is Bold in second doc:" + otherrun.get(j).isBold() + eol
+								+ "Paragrpah text:" + otherparagraphs.get(i).getText() + eol + "Line number mismtached"
+								+ pos + eol);
 
 					}
 
 					if (onerun.get(j).isItalic() != otherrun.get(j).isItalic()) {
 
 						mismatch.add("Paragraph Line is not Italic in both document" + eol
-								+ "Paragrpah is italic in first doc" + onerun.get(j).isItalic() + eol
-								+ "Paragraph is italic in second doc" + otherrun.get(j).isItalic() + eol
+								+ "Paragrpah is italic in first doc:" + onerun.get(j).isItalic() + eol
+								+ "Paragraph is italic in second doc:" + otherrun.get(j).isItalic() + eol
 								+ "Paragrpah text:" + otherparagraphs.get(i).getText() + eol + "Line number mismtached"
 								+ pos + eol);
 
@@ -199,10 +208,18 @@ public class ExtractDatafromTable {
 								+ otherparagraphs.get(i).getText() + eol + "Line number mismtached" + pos + eol);
 
 					}
+					if (onerun.get(j).getUnderline() != otherrun.get(j).getUnderline()) {
+
+						mismatch.add("Paragraph Line is underlined  in one document" + eol + "underlined  in first doc:"
+								+ onerun.get(j).getUnderline() + eol + "underline in second doc:"
+								+ otherrun.get(j).getUnderline() + eol + "Paragrpah text:"
+								+ otherparagraphs.get(i).getText() + eol + "Line number mismtached" + pos + eol);
+
+					}
+
 				}
 			}
 		}
-
 	}
 
 	public void picComparator() throws IOException {
@@ -322,14 +339,19 @@ public class ExtractDatafromTable {
 									+ "cellParagraphline in second doc:" + cellotherparagraphs.get(l).getRuns().size()
 									+ eol + "cellParagrpah text in first doc:" + celloneparagraphs.get(l).getText()
 									+ eol + "cellParagrpah text in second doc:" + cellotherparagraphs.get(l).getText()
-									+ eol);
+									+ eol + eol
+									+ "Mismatch migh be due to some text is bold/Italic/Fontsizemismatch/FontNamemismatch/Underlinedmismtach"
+									+ eol+eol);
 
 						} else {
 							List<XWPFRun> onerun = celloneparagraphs.get(l).getRuns();
 							List<XWPFRun> otherrun = cellotherparagraphs.get(l).getRuns();
 							int pos = 0;
-
-							for (int m = 0; m < onerun.size(); m++) {
+							int temp = otherrun.size(); // This will avoid the array out of index error, when if else
+														// condition is removed
+							if (onerun.size() < otherrun.size())
+								temp = onerun.size();
+							for (int m = 0; m < temp; m++) {
 								pos = 1 + pos;
 								System.out.println("cellParagraph Line number in first doc:" + pos);
 								System.out.println("cellParagraph Line number in second doc:" + pos);
@@ -341,12 +363,14 @@ public class ExtractDatafromTable {
 								System.out.println("cellCurrent Font Size : " + otherrun.get(m).getFontSize());
 								System.out.println("cellCurrent Font Name : " + onerun.get(m).getFontName());
 								System.out.println("cellCurrent Font Name : " + otherrun.get(m).getFontName());
+								System.out.println("Current text underline:" + onerun.get(m).getUnderline());
+								System.out.println("Current text underline:" + otherrun.get(m).getUnderline());
 
 								if (onerun.get(m).isBold() != otherrun.get(m).isBold()) {
 
 									mismatch.add("cellParagraph Line is not Bold in both document" + eol
-											+ "cellParagraph is Bold in first doc" + onerun.get(m).isBold() + eol
-											+ "cellParagraph is Bold in second doc" + otherrun.get(m).isBold() + eol
+											+ "cellParagraph is Bold in first doc:" + onerun.get(m).isBold() + eol
+											+ "cellParagraph is Bold in second doc:" + otherrun.get(m).isBold() + eol
 											+ "cellParagraph text:" + cellotherparagraphs.get(m).getText() + eol
 											+ "Line number mismtached" + pos + eol);
 
@@ -355,9 +379,9 @@ public class ExtractDatafromTable {
 								if (onerun.get(m).isItalic() != otherrun.get(m).isItalic()) {
 
 									mismatch.add("cellParagraph Line is not Italic in both document" + eol
-											+ "cellParagraph is italic in first doc" + onerun.get(m).isItalic() + eol
-											+ "cellParagraph is italic in second doc" + otherrun.get(m).isItalic() + eol
-											+ "cellParagraph text:" + cellotherparagraphs.get(m).getText() + eol
+											+ "cellParagraph is italic in first doc:" + onerun.get(m).isItalic() + eol
+											+ "cellParagraph is italic in second doc:" + otherrun.get(m).isItalic()
+											+ eol + "cellParagraph text:" + cellotherparagraphs.get(m).getText() + eol
 											+ "Line number mismtached" + pos + eol);
 
 								}
@@ -375,9 +399,19 @@ public class ExtractDatafromTable {
 										.equalsIgnoreCase(otherrun.get(m).getFontName())))) {
 
 									mismatch.add("cellParagraph Line Fontname is not matching in both document" + eol
-											+ "Fontname  in first doc" + onerun.get(m).getFontName() + eol
-											+ "Fontname in second doc" + otherrun.get(m).getFontName() + eol
+											+ "Fontname  in first doc:" + onerun.get(m).getFontName() + eol
+											+ "Fontname in second doc:" + otherrun.get(m).getFontName() + eol
 											+ "Paragrpah text:" + cellotherparagraphs.get(m).getText() + eol
+											+ "Line number mismtached:" + pos + eol);
+
+								}
+
+								if (onerun.get(m).getUnderline() != otherrun.get(m).getUnderline()) {
+
+									mismatch.add("Paragraph Line is underlined  in one document" + eol
+											+ "underlined  in first doc:" + onerun.get(m).getUnderline() + eol
+											+ "underline in second doc:" + otherrun.get(m).getUnderline() + eol
+											+ "Paragrpah text:" + otherparagraphs.get(m).getText() + eol
 											+ "Line number mismtached" + pos + eol);
 
 								}
@@ -385,10 +419,11 @@ public class ExtractDatafromTable {
 							}
 						}
 					}
-
 				}
 			}
+
 		}
+
 		return "Equal";
 
 	}
