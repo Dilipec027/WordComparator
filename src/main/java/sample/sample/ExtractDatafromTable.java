@@ -7,6 +7,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,9 +21,12 @@ import javax.xml.namespace.QName;
 
 import org.apache.poi.POIXMLProperties.ExtendedProperties;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.ICell;
 import org.apache.poi.xwpf.usermodel.IRunElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFFooter;
+import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -54,6 +60,9 @@ public class ExtractDatafromTable {
 
 			onedocument = new XWPFDocument(onefis);
 			otherdocument = new XWPFDocument(otherfis);
+			picComparator();
+			headerCompare();
+			footCompare();
 
 			oneparagraphs = onedocument.getParagraphs();
 			otherparagraphs = otherdocument.getParagraphs();
@@ -62,8 +71,7 @@ public class ExtractDatafromTable {
 				mismatch.add("Pargraphs are not equal,Cant be compared");
 				return mismatch;
 			}
-			ParagraphContentCompare();
-			picComparator();
+			ParagraphContentCompare();			
 
 			if (!(tableComparator().equalsIgnoreCase("Equal"))) {
 				mismatch.add("Tables are not equal,Cant be compared");
@@ -143,7 +151,7 @@ public class ExtractDatafromTable {
 						+ oneparagraphs.get(i).getText() + eol + "Paragraph text in second doc:" + eol
 						+ otherparagraphs.get(i).getText() + eol + eol
 						+ "Mismatch migh be due to some text is bold/Italic/Fontsizemismatch/FontNamemismatch/Underlinedmismtach"
-						+ eol+eol);
+						+ eol + eol);
 
 			} else {
 
@@ -224,56 +232,49 @@ public class ExtractDatafromTable {
 
 	public void picComparator() throws IOException {
 
-//		HWPFDocument docB = new HWPFDocument(fileInputStream);
-//        PicturesTable picB = onedocument.getPicturesTable();
-//        List picturesB = picB.getAllPictures();
-//        for (Object o : picturesB) {
-//            Picture pic = (Picture) o;
-//            int height = pic.getHeight();
-//            int width = pic.getWidht();
-        
-		
+		// HWPFDocument docB = new HWPFDocument(fileInputStream);
+		// PicturesTable picB = onedocument.getPicturesTable();
+		// List picturesB = picB.getAllPictures();
+		// for (Object o : picturesB) {
+		// Picture pic = (Picture) o;
+		// int height = pic.getHeight();
+		// int width = pic.getWidht();
+
 		List<XWPFPictureData> onepiclist = onedocument.getAllPictures();
 		List<XWPFPictureData> otherpiclist = otherdocument.getAllPictures();
 
 		if (onepiclist.size() != otherpiclist.size()) {
 			mismatch.add("Picture numbers are not equal" + eol + "pictures in first doc:" + onepiclist.size() + eol
 					+ "pictures in second doc:" + otherpiclist.size() + eol);
-		}
+		} else {
 
-		int temp;
-		for (int i = 0; i < onepiclist.size(); i++) {
-			byte[] onepic = onepiclist.get(i).getData();
-			temp = 0;
-			for (int j = 0; j < otherpiclist.size(); j++) {
-				temp = j;
-				byte[] otherpic = otherpiclist.get(j).getData();
-				System.out.println("first pic" + onepic.toString());
-				System.out.println("second pic" + otherpic.toString());
-				
-				if (Arrays.equals(onepic, otherpic)) {					
-//					BufferedImage imag = ImageIO.read(new ByteArrayInputStream(onepic));
-//					ImageIO.write(imag, "jpg", new File("target\\imagefromword" + i + ".jpg"));
-//					System.out.println("Image is created");
-//					
-//					BufferedImage imag1 = ImageIO.read(new ByteArrayInputStream(otherpic));
-//					ImageIO.write(imag1, "jpg", new File("target\\imagefromword" + i+i + ".jpg"));
-//					System.out.println("Image is created");
-					break;
+			int temp;
+			for (int i = 0; i < onepiclist.size(); i++) {
+				byte[] onepic = onepiclist.get(i).getData();
+				temp = 0;
+				for (int j = 0; j < otherpiclist.size(); j++) {
+					temp = j;
+					byte[] otherpic = otherpiclist.get(j).getData();
+					System.out.println("first pic" + onepic.toString());
+					System.out.println("second pic" + otherpic.toString());
+					if (Arrays.equals(onepic, otherpic)) {
+						temp = 0;
+						break;
+					}
+				}
+
+				if (temp == (otherpiclist.size() - 1)) {
+					BufferedImage imag = ImageIO.read(new ByteArrayInputStream(onepic));
+					foldercreation();
+					ImageIO.write(imag, "jpg", new File("Screenshots\\imagefromword" + i + ".jpg"));
+					System.out.println("Image is created");
+					String eol = System.getProperty("line.separator");
+					mismatch.add("Picture is not equal" + eol + "pictures in first doc:" + onepiclist.get(i).getData()
+							+ eol + "Check this picture in screenshot folder" + eol);
+
 				}
 			}
-			
-			if (temp == (otherpiclist.size()-1)){
-				BufferedImage imag = ImageIO.read(new ByteArrayInputStream(onepic));
-				ImageIO.write(imag, "jpg", new File("target\\imagefromword" + i + ".jpg"));
-				System.out.println("Image is created");
-				String eol = System.getProperty("line.separator");
-				mismatch.add("Picture is not equal" + eol + "pictures in first doc:" + onepiclist.get(i).getData() + eol
-						+ "Check this picture in target folder" + eol);
-
-			}
 		}
-
 	}
 
 	public String tableComparator() {
@@ -359,7 +360,7 @@ public class ExtractDatafromTable {
 									+ eol + "cellParagrpah text in second doc:" + cellotherparagraphs.get(l).getText()
 									+ eol + eol
 									+ "Mismatch migh be due to some text is bold/Italic/Fontsizemismatch/FontNamemismatch/Underlinedmismtach"
-									+ eol+eol);
+									+ eol + eol);
 
 						} else {
 							List<XWPFRun> onerun = celloneparagraphs.get(l).getRuns();
@@ -443,6 +444,41 @@ public class ExtractDatafromTable {
 		}
 
 		return "Equal";
+	}
 
+	public void foldercreation() {
+		String currentDir = System.getProperty("user.dir");
+		System.out.println(currentDir);
+		Path path = Paths.get(currentDir + "\\Screenshots");
+		if (!Files.exists(path)) {
+			try {
+				Files.createDirectories(path);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void headerCompare() {
+		// List<XWPFHeader> header = onedocument.getHeaderList();
+		XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(onedocument);
+		// read header
+		XWPFHeader header = policy.getHeader(1);
+		System.out.println(header.getText());
+	}
+
+	public void footCompare() {
+		// List<XWPFHeader> header = onedocument.getHeaderList();
+		XWPFHeaderFooterPolicy onepolicy = new XWPFHeaderFooterPolicy(onedocument);
+		
+		// read header
+		XWPFFooter onefooter = onepolicy.getFooter(1);
+		System.out.println(onefooter.getText());
+		
+        XWPFHeaderFooterPolicy otherpolicy = new XWPFHeaderFooterPolicy(otherdocument);
+		
+		// read header
+		XWPFFooter otherfooter = otherpolicy.getFooter(1);
+		System.out.println(otherfooter.getText());
 	}
 }
