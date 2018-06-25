@@ -27,7 +27,9 @@ import org.apache.poi.xwpf.usermodel.IRunElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
+import org.apache.poi.xwpf.usermodel.XWPFHyperlink;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
@@ -63,6 +65,7 @@ public class ExtractDatafromTable {
 			picComparator();
 			headerCompare();
 			footCompare();
+			hyperlinkCompare();
 
 			oneparagraphs = onedocument.getParagraphs();
 			otherparagraphs = otherdocument.getParagraphs();
@@ -71,7 +74,7 @@ public class ExtractDatafromTable {
 				mismatch.add("Pargraphs are not equal,Cant be compared");
 				return mismatch;
 			}
-			ParagraphContentCompare();			
+			ParagraphContentCompare();
 
 			if (!(tableComparator().equalsIgnoreCase("Equal"))) {
 				mismatch.add("Tables are not equal,Cant be compared");
@@ -461,24 +464,78 @@ public class ExtractDatafromTable {
 
 	public void headerCompare() {
 		// List<XWPFHeader> header = onedocument.getHeaderList();
-		XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(onedocument);
+		// read Header
+		XWPFHeaderFooterPolicy onepolicy = new XWPFHeaderFooterPolicy(onedocument);
+		XWPFHeader oneheader = onepolicy.getDefaultHeader();
+		System.out.println(oneheader.getText());
+		List<XWPFPictureData> oneheaderpic = oneheader.getAllPictures();
+
 		// read header
-		XWPFHeader header = policy.getHeader(1);
-		System.out.println(header.getText());
+		XWPFHeaderFooterPolicy otherpolicy = new XWPFHeaderFooterPolicy(otherdocument);
+		XWPFHeader otherheader = otherpolicy.getDefaultHeader();
+		List<XWPFPictureData> otherheaderpic = otherheader.getAllPictures();
+		System.out.println();
+		System.out.println(otherheader.getText());
+
+		if (oneheaderpic.size() != otherheaderpic.size()) {
+			mismatch.add("Header Pictures are not equal" + eol);
+		} else {
+			for (int i = 0; i < oneheaderpic.size(); i++) {
+				byte[] oneimagedata = oneheaderpic.get(i).getData();
+				byte[] otherimagedata = otherheaderpic.get(i).getData();
+				if (!(Arrays.equals(oneimagedata, otherimagedata))) {
+					mismatch.add("Header Pictures are not equal" + eol + eol);
+					break;
+				}
+			}
+		}
+		if (!(oneheader.getText().equals(otherheader.getText())))
+			mismatch.add("Header Text is not Equal or default header might be different" + eol
+					+ "Deafult Header Text of first document header:" + oneheader.getText() + eol
+					+ "Deafult Header Text of second documnet header:" + otherheader.getText() + eol);
+
 	}
 
 	public void footCompare() {
 		// List<XWPFHeader> header = onedocument.getHeaderList();
 		XWPFHeaderFooterPolicy onepolicy = new XWPFHeaderFooterPolicy(onedocument);
-		
-		// read header
-		XWPFFooter onefooter = onepolicy.getFooter(1);
+
+		// read footer
+		XWPFFooter onefooter = onepolicy.getDefaultFooter();
 		System.out.println(onefooter.getText());
-		
-        XWPFHeaderFooterPolicy otherpolicy = new XWPFHeaderFooterPolicy(otherdocument);
-		
-		// read header
-		XWPFFooter otherfooter = otherpolicy.getFooter(1);
+		List<XWPFPictureData> onefooterpic = onefooter.getAllPictures();
+
+		XWPFHeaderFooterPolicy otherpolicy = new XWPFHeaderFooterPolicy(otherdocument);
+
+		// read footer
+		XWPFFooter otherfooter = otherpolicy.getDefaultFooter();
 		System.out.println(otherfooter.getText());
+		List<XWPFPictureData> otherfooterpic = otherfooter.getAllPictures();
+
+		if (onefooterpic.size() != otherfooterpic.size()) {
+			mismatch.add("Footer Pictures are not equal" + eol);
+		} else {
+			for (int i = 0; i < onefooterpic.size(); i++) {
+				byte[] oneimagedata = onefooterpic.get(i).getData();
+				byte[] otherimagedata = otherfooterpic.get(i).getData();
+				if (!(Arrays.equals(oneimagedata, otherimagedata))) {
+					mismatch.add("Header Pictures are not equal" + eol + eol);
+					break;
+				}
+			}
+		}
+		if (!(onefooter.getText().equals(otherfooter.getText())))
+			mismatch.add("Footer Text is not Equal or default Footer might be different" + eol
+					+ "Deafult footer Text of first document footer:" + onefooter.getText() + eol
+					+ "Deafult footer  Text of second documnet footer:" + otherfooter.getText() + eol);
+
+	}
+
+	public void hyperlinkCompare() {
+		XWPFHyperlink[] onedocLink = onedocument.getHyperlinks();
+		XWPFHyperlink[] otherdocLink = otherdocument.getHyperlinks();
+		if (!Arrays.equals(onedocLink, otherdocLink))
+			mismatch.add("Hyperlinks are not equal in the documents" + eol + eol);
+
 	}
 }
