@@ -54,7 +54,7 @@ public class WordComparatorNewScreen {
 
 		header.setSize(400, 400);
 		JLabel header1 = new JLabel(" ", JLabel.CENTER);
-		header1.setFont(new Font("Calibri", Font.PLAIN, 24));
+		//header1.setFont(new Font("Calibri", Font.PLAIN, 24));
 		header1.setSize(400, 400);
 
 		JPanel panel = new JPanel();
@@ -143,14 +143,9 @@ public class WordComparatorNewScreen {
 		c2.gridy = 0;
 		panel2.add(label3, c2);
 
-		JCheckBox checkbox = new JCheckBox("Header Comparsion needed");
+		JCheckBox checkbox = new JCheckBox("Header/Footer Comparsion needed");
 		checkbox.setSelected(true);
-		if (checkbox.isSelected()) {
-			HeaderCompare = true;
-		} else {
-			HeaderCompare = false;
-		}
-
+		
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				text.setText(getpath());
@@ -166,7 +161,14 @@ public class WordComparatorNewScreen {
 			public void actionPerformed(ActionEvent e) {
 				location = text.getText();
 				location1 = text1.getText();
-				// header1.setText("Please Wait!"); use Mutli threading to handle it
+				System.out.println("Check box is selected "+checkbox.isSelected());
+				if (checkbox.isSelected()) {
+					HeaderCompare = true;
+				} else {
+					HeaderCompare = false;
+				}
+
+//				header1.setText("Please Wait!"); //use Mutli threading to handle it
 				result();
 			}
 		});
@@ -209,10 +211,10 @@ public class WordComparatorNewScreen {
 		String doclocation2 = location1.replace("\\", "\\\\");
 		System.out.println(doclocation1);
 		System.out.println(doclocation2);
-		ExtractDatafromTable cw = new ExtractDatafromTable();
+		WordComparatorDTO cw = new WordComparatorDTO();
 		List<String> temp;
 		try {
-			temp = cw.wordCompare(doclocation1, doclocation2);
+			temp = cw.wordCompare(doclocation1, doclocation2,HeaderCompare);
 			StringBuffer temp1 = new StringBuffer();
 			System.out.println("temp" + temp);
 			for (String str : temp) {
@@ -228,7 +230,7 @@ public class WordComparatorNewScreen {
 		frame1 = new JFrame("Comparison Result");
 		frame1.setSize(600, 600);
 		Box box1 = Box.createHorizontalBox();
-		box1.add(new JLabel("Result is displayed below"));
+		box1.add(new JLabel("Please inculde header check always,change in header also might lead to some differences"));
 		Box box = Box.createHorizontalBox();
 		box.add(new JScrollPane(result));
 		Box box2 = Box.createHorizontalBox();
