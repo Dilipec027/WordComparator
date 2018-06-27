@@ -466,21 +466,40 @@ public class WordComparatorDTO {
 
 	public void headerCompare() {
 		// List<XWPFHeader> header = onedocument.getHeaderList();
+
+		List<XWPFPictureData> oneheaderpic = null;
+		List<XWPFPictureData> otherheaderpic = null;
+		Boolean oneHeaderHasPic = true;
+		Boolean otherHeaderHasPic = true;
+		Boolean oneHeaderHasText = true;
+		Boolean otherHeadHasText = true;
+
 		// read Header
+
+		XWPFHeaderFooterPolicy onepolicy = new XWPFHeaderFooterPolicy(onedocument);
+		XWPFHeader oneheader = onepolicy.getDefaultHeader();
+//		System.out.println(oneheader.getText());
 		try {
-			XWPFHeaderFooterPolicy onepolicy = new XWPFHeaderFooterPolicy(onedocument);
-			XWPFHeader oneheader = onepolicy.getDefaultHeader();
-			System.out.println(oneheader.getText());
-			List<XWPFPictureData> oneheaderpic = oneheader.getAllPictures();
+			oneheaderpic = oneheader.getAllPictures();
+		} catch (NullPointerException e) {
+			oneHeaderHasPic = false;
+		}
+		// read header
+		XWPFHeaderFooterPolicy otherpolicy = new XWPFHeaderFooterPolicy(otherdocument);
+		XWPFHeader otherheader = otherpolicy.getDefaultHeader();
 
-			// read header
-			XWPFHeaderFooterPolicy otherpolicy = new XWPFHeaderFooterPolicy(otherdocument);
-			XWPFHeader otherheader = otherpolicy.getDefaultHeader();
+		try {
+			otherheaderpic = otherheader.getAllPictures();
+		} catch (NullPointerException e) {
+			otherHeaderHasPic = false;
+		}
+		System.out.println();
+		// System.out.println(otherheader.getText());
+		if (oneHeaderHasPic != otherHeaderHasPic) {
+			mismatch.add("Header Picture are not equal" + eol);
+		} else if (oneHeaderHasPic == otherHeaderHasPic && otherHeaderHasPic == false) {
 
-			List<XWPFPictureData> otherheaderpic = otherheader.getAllPictures();
-			System.out.println();
-			System.out.println(otherheader.getText());
-
+		} else {
 			if (oneheaderpic.size() != otherheaderpic.size()) {
 				mismatch.add("Header Pictures are not equal" + eol);
 			} else {
@@ -493,35 +512,65 @@ public class WordComparatorDTO {
 					}
 				}
 			}
+		}
 
+		try {
+			oneheader.getText();
+		} catch (NullPointerException e) {
+			oneHeaderHasText = false;
+		}
+		try {
+			otherheader.getText();
+		} catch (NullPointerException e) {
+			otherHeadHasText = false;
+		}
+		if (oneHeaderHasText != otherHeadHasText) {
+			mismatch.add("Header Text are not equal" + eol);
+		} else if (oneHeaderHasText == otherHeadHasText && oneHeaderHasText == false) {
+		} else {
 			if (!(oneheader.getText().equals(otherheader.getText())))
 				mismatch.add("Header Text is not Equal or default header might be different" + eol
 						+ "Deafult Header Text of first document header:" + oneheader.getText() + eol
 						+ "Deafult Header Text of second documnet header:" + otherheader.getText() + eol);
-		} catch (Exception e) {
-			e.printStackTrace();
-			mismatch.add("Header is not matching"+eol);
 		}
 	}
 
 	public void footCompare() {
 		// List<XWPFHeader> header = onedocument.getHeaderList();
+		List<XWPFPictureData> onefooterpic = null;
+		Boolean oneFooterHasPic = true;
+		List<XWPFPictureData> otherfooterpic = null;
+		Boolean otherFooterHasPic = true;
+		Boolean otherFooterHasText = true;
+		Boolean oneFooterHasText = true;
+
+		XWPFHeaderFooterPolicy onepolicy = new XWPFHeaderFooterPolicy(onedocument);
+
+		// read footer
+		XWPFFooter onefooter = onepolicy.getDefaultFooter();
+//		System.out.println(onefooter.getText());
 
 		try {
-			XWPFHeaderFooterPolicy onepolicy = new XWPFHeaderFooterPolicy(onedocument);
+			onefooterpic = onefooter.getAllPictures();
+		} catch (NullPointerException e) {
+			oneFooterHasPic = false;
+		}
+		XWPFHeaderFooterPolicy otherpolicy = new XWPFHeaderFooterPolicy(otherdocument);
 
-			// read footer
-			XWPFFooter onefooter = onepolicy.getDefaultFooter();
-			System.out.println(onefooter.getText());
-			List<XWPFPictureData> onefooterpic = onefooter.getAllPictures();
+		// read footer
+		XWPFFooter otherfooter = otherpolicy.getDefaultFooter();
+		// System.out.println(otherfooter.getText());
 
-			XWPFHeaderFooterPolicy otherpolicy = new XWPFHeaderFooterPolicy(otherdocument);
+		try {
+			otherfooterpic = otherfooter.getAllPictures();
+		} catch (NullPointerException e) {
+			otherFooterHasPic = false;
+		}
+		if (oneFooterHasPic != otherFooterHasPic) {
+			mismatch.add("Picture in Footers are not equal" + eol);
+		} else if (oneFooterHasPic == otherFooterHasPic && otherFooterHasPic == false) {
 
-			// read footer
-			XWPFFooter otherfooter = otherpolicy.getDefaultFooter();
-			System.out.println(otherfooter.getText());
-			List<XWPFPictureData> otherfooterpic = otherfooter.getAllPictures();
-
+		} else {
 			if (onefooterpic.size() != otherfooterpic.size()) {
 				mismatch.add("Footer Pictures are not equal" + eol);
 			} else {
@@ -534,13 +583,28 @@ public class WordComparatorDTO {
 					}
 				}
 			}
+		}
+		try {
+			onefooter.getText();
+		} catch (NullPointerException e) {
+			oneFooterHasText = false;
+		}
+		try {
+			otherfooter.getText();
+		} catch (NullPointerException e) {
+			otherFooterHasText = false;
+		}
+
+		if (oneFooterHasText != otherFooterHasText) {
+			mismatch.add("Footer Text is not equal");
+		} else if (oneFooterHasText == otherFooterHasText && otherFooterHasText == false) {
+
+		} else {
 			if (!(onefooter.getText().equals(otherfooter.getText())))
+
 				mismatch.add("Footer Text is not Equal or default Footer might be different" + eol
 						+ "Deafult footer Text of first document footer:" + onefooter.getText() + eol
 						+ "Deafult footer  Text of second documnet footer:" + otherfooter.getText() + eol);
-		} catch (Exception e) {
-			e.printStackTrace();
-			mismatch.add("Footer is not matching"+eol);
 		}
 	}
 

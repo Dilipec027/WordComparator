@@ -31,6 +31,7 @@ public class WordComparatorNewScreen {
 	private boolean HeaderCompare;
 	private String location;
 	private String location1;
+	private JLabel header1;
 
 	// public WordComparatorNewScreen() {
 	// prepareGUI();
@@ -53,9 +54,9 @@ public class WordComparatorNewScreen {
 		header.setFont(new Font("Calibri", Font.PLAIN, 24));
 
 		header.setSize(400, 400);
-		JLabel header1 = new JLabel(" ", JLabel.CENTER);
-		//header1.setFont(new Font("Calibri", Font.PLAIN, 24));
-		header1.setSize(400, 400);
+		header1 = new JLabel(" ", JLabel.CENTER);
+		// header1.setFont(new Font("Calibri", Font.PLAIN, 24));
+//		header1.setSize(400, 400);
 
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
@@ -145,7 +146,7 @@ public class WordComparatorNewScreen {
 
 		JCheckBox checkbox = new JCheckBox("Header/Footer Comparsion needed");
 		checkbox.setSelected(true);
-		
+
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				text.setText(getpath());
@@ -159,16 +160,18 @@ public class WordComparatorNewScreen {
 		});
 		submit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				location = text.getText();
 				location1 = text1.getText();
-				System.out.println("Check box is selected "+checkbox.isSelected());
+				System.out.println("Check box is selected " + checkbox.isSelected());
 				if (checkbox.isSelected()) {
 					HeaderCompare = true;
 				} else {
 					HeaderCompare = false;
 				}
 
-//				header1.setText("Please Wait!"); //use Mutli threading to handle it
+//				header1.setText("Please Wait!"); // use Mutli threading to handle it
+
 				result();
 			}
 		});
@@ -214,7 +217,7 @@ public class WordComparatorNewScreen {
 		WordComparatorDTO cw = new WordComparatorDTO();
 		List<String> temp;
 		try {
-			temp = cw.wordCompare(doclocation1, doclocation2,HeaderCompare);
+			temp = cw.wordCompare(doclocation1, doclocation2, HeaderCompare);
 			StringBuffer temp1 = new StringBuffer();
 			System.out.println("temp" + temp);
 			for (String str : temp) {
@@ -249,4 +252,5 @@ public class WordComparatorNewScreen {
 		frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}
+
 }
