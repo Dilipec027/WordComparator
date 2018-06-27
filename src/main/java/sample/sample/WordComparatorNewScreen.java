@@ -46,7 +46,7 @@ public class WordComparatorNewScreen {
 
 	private void prepareGUI() {
 
-		frame = new JFrame("Word Comparator");
+		frame = new JFrame("Word Document Comparator");
 		frame.setSize(600, 600);
 		frame.setLayout(new GridLayout(10, 0));
 		JLabel header = new JLabel("Please upload files for comparing", JLabel.CENTER);
@@ -72,7 +72,7 @@ public class WordComparatorNewScreen {
 		panel.add(label, c);
 
 		JTextArea text = new JTextArea("Please upload the file");
-		c.weightx = 1;
+		c.weightx = 5.5;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
 		c.gridy = 0;
@@ -98,7 +98,7 @@ public class WordComparatorNewScreen {
 		panel1.add(label1, c1);
 
 		JTextArea text1 = new JTextArea("Please upload the file");
-		c1.weightx = 1;
+		c1.weightx = 5.5;
 		c1.fill = GridBagConstraints.HORIZONTAL;
 		c1.gridx = 1;
 		c1.gridy = 0;
