@@ -596,7 +596,7 @@ public class WordComparatorDTO {
 		}
 
 		if (oneFooterHasText != otherFooterHasText) {
-			mismatch.add("Footer Text is not equal");
+			mismatch.add("Footer Text is not equal"+eol);
 		} else if (oneFooterHasText == otherFooterHasText && otherFooterHasText == false) {
 
 		} else {
