@@ -10,6 +10,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.AbstractButton;
@@ -171,8 +172,23 @@ public class WordComparatorNewScreen {
 				}
 
 //				header1.setText("Please Wait!"); // use Mutli threading to handle it
-
-				result();
+				// this is for html report
+				HtmlReportGeneration report = new HtmlReportGeneration();
+				String doclocation1 = location.replace("\\", "\\\\");
+				String doclocation2 = location1.replace("\\", "\\\\");
+				WordComparatorDTO cw = new WordComparatorDTO();
+			
+				List<String> temp = cw.wordCompare(doclocation1, doclocation2, HeaderCompare);
+				try {
+					report.reportGeneration(temp);
+					header1.setText("Document comparision done");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					header1.setText(e1.toString());
+					e1.printStackTrace();
+				}
+				// html report code ends here
+//				result(); // this is for result in the same tool
 			}
 		});
 

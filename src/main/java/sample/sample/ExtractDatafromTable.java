@@ -148,13 +148,13 @@ public class ExtractDatafromTable {
 
 			if (oneparagraphs.get(i).getRuns().size() != otherparagraphs.get(i).getRuns().size()) {
 
-				mismatch.add("Paragraph lines is not equal" + eol + "Paragrpahlines in first doc:"
-						+ oneparagraphs.get(i).getRuns().size() + eol + "Paragraphlines in second doc:"
-						+ otherparagraphs.get(i).getRuns().size() + eol + "Paragrpah text in first doc:" + eol
-						+ oneparagraphs.get(i).getText() + eol + "Paragraph text in second doc:" + eol
-						+ otherparagraphs.get(i).getText() + eol + eol
-						+ "Mismatch migh be due to some text is bold/Italic/Fontsizemismatch/FontNamemismatch/Underlinedmismtach"
-						+ eol + eol);
+				mismatch.add(
+						"Mismatch migh be due to some text is bold/Italic/Fontsizemismatch/FontNamemismatch/Underlinedmismtach"
+								+ eol + "Paragraph lines is not equal" + eol + "Paragrpahlines in first doc:"
+								+ oneparagraphs.get(i).getRuns().size() + eol + "Paragraphlines in second doc:"
+								+ otherparagraphs.get(i).getRuns().size() + eol + "Paragrpah text in first doc:" + eol
+								+ oneparagraphs.get(i).getText() + eol + "Paragraph text in second doc:" + eol
+								+ otherparagraphs.get(i).getText() + eol + eol);
 
 			} else {
 
@@ -356,14 +356,18 @@ public class ExtractDatafromTable {
 
 						if (celloneparagraphs.get(l).getRuns().size() != cellotherparagraphs.get(l).getRuns().size()) {
 
-							mismatch.add("cellParagraph lines are not equal" + eol + "cellParagrpahline in first doc:"
-									+ celloneparagraphs.get(l).getRuns().size() + eol
-									+ "cellParagraphline in second doc:" + cellotherparagraphs.get(l).getRuns().size()
-									+ eol + "cellParagrpah text in first doc:" + celloneparagraphs.get(l).getText()
-									+ eol + "cellParagrpah text in second doc:" + cellotherparagraphs.get(l).getText()
-									+ eol + eol
-									+ "Mismatch migh be due to some text is bold/Italic/Fontsizemismatch/FontNamemismatch/Underlinedmismtach"
-									+ eol + eol);
+							mismatch.add(
+									"Mismatch might be due to some text is bold/Italic/Fontsizemismatch/FontNamemismatch/Underlinedmismtach"
+											+ eol + "cellParagraph lines are not equal" + eol
+											+ "cellParagrpahline in first doc:"
+											+ celloneparagraphs.get(l).getRuns().size() + eol
+											+ "cellParagraphline in second doc:"
+											+ cellotherparagraphs.get(l).getRuns().size() + eol
+											+ "cellParagrpah text in first doc:" + celloneparagraphs.get(l).getText()
+											+ eol + "cellParagrpah text in second doc:"
+											+ cellotherparagraphs.get(l).getText() + eol + eol
+
+											+ eol + eol);
 
 						} else {
 							List<XWPFRun> onerun = celloneparagraphs.get(l).getRuns();

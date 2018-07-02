@@ -150,13 +150,13 @@ public class WordComparatorDTO {
 
 			if (oneparagraphs.get(i).getRuns().size() != otherparagraphs.get(i).getRuns().size()) {
 
-				mismatch.add("Paragraph lines is not equal" + eol + "Paragrpahlines in first doc:"
-						+ oneparagraphs.get(i).getRuns().size() + eol + "Paragraphlines in second doc:"
-						+ otherparagraphs.get(i).getRuns().size() + eol + "Paragrpah text in first doc:" + eol
-						+ oneparagraphs.get(i).getText() + eol + "Paragraph text in second doc:" + eol
-						+ otherparagraphs.get(i).getText() + eol + eol
-						+ "Mismatch migh be due to some text is bold/Italic/Fontsizemismatch/FontNamemismatch/Underlinedmismtach"
-						+ eol + eol);
+				mismatch.add(
+						"Mismatch might be due to some text is bold/Italic/Fontsizemismatch/FontNamemismatch/Underlinedmismtach"
+								+ eol + "Paragraph lines is not equal" + eol + "Paragrpahlines in first doc:"
+								+ oneparagraphs.get(i).getRuns().size() + eol + "Paragraphlines in second doc:"
+								+ otherparagraphs.get(i).getRuns().size() + eol + "Paragrpah text in first doc:" + eol
+								+ oneparagraphs.get(i).getText() + eol + "Paragraph text in second doc:" + eol
+								+ otherparagraphs.get(i).getText() + eol + eol);
 
 			} else {
 
@@ -358,14 +358,16 @@ public class WordComparatorDTO {
 
 						if (celloneparagraphs.get(l).getRuns().size() != cellotherparagraphs.get(l).getRuns().size()) {
 
-							mismatch.add("cellParagraph lines are not equal" + eol + "cellParagrpahline in first doc:"
-									+ celloneparagraphs.get(l).getRuns().size() + eol
-									+ "cellParagraphline in second doc:" + cellotherparagraphs.get(l).getRuns().size()
-									+ eol + "cellParagrpah text in first doc:" + celloneparagraphs.get(l).getText()
-									+ eol + "cellParagrpah text in second doc:" + cellotherparagraphs.get(l).getText()
-									+ eol + eol
-									+ "Mismatch migh be due to some text is bold/Italic/Fontsizemismatch/FontNamemismatch/Underlinedmismtach"
-									+ eol + eol);
+							mismatch.add(
+									"Mismatch migh be due to some text is bold/Italic/Fontsizemismatch/FontNamemismatch/Underlinedmismtach"
+											+ eol + "cellParagraph lines are not equal" + eol
+											+ "cellParagrpahline in first doc:"
+											+ celloneparagraphs.get(l).getRuns().size() + eol
+											+ "cellParagraphline in second doc:"
+											+ cellotherparagraphs.get(l).getRuns().size() + eol
+											+ "cellParagrpah text in first doc:" + celloneparagraphs.get(l).getText()
+											+ eol + "cellParagrpah text in second doc:"
+											+ cellotherparagraphs.get(l).getText() + eol + eol);
 
 						} else {
 							List<XWPFRun> onerun = celloneparagraphs.get(l).getRuns();
@@ -478,7 +480,7 @@ public class WordComparatorDTO {
 
 		XWPFHeaderFooterPolicy onepolicy = new XWPFHeaderFooterPolicy(onedocument);
 		XWPFHeader oneheader = onepolicy.getDefaultHeader();
-//		System.out.println(oneheader.getText());
+		// System.out.println(oneheader.getText());
 		try {
 			oneheaderpic = oneheader.getAllPictures();
 		} catch (NullPointerException e) {
@@ -548,7 +550,7 @@ public class WordComparatorDTO {
 
 		// read footer
 		XWPFFooter onefooter = onepolicy.getDefaultFooter();
-//		System.out.println(onefooter.getText());
+		// System.out.println(onefooter.getText());
 
 		try {
 			onefooterpic = onefooter.getAllPictures();
@@ -596,7 +598,7 @@ public class WordComparatorDTO {
 		}
 
 		if (oneFooterHasText != otherFooterHasText) {
-			mismatch.add("Footer Text is not equal"+eol);
+			mismatch.add("Footer Text is not equal" + eol);
 		} else if (oneFooterHasText == otherFooterHasText && otherFooterHasText == false) {
 
 		} else {
