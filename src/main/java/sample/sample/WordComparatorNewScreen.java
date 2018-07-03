@@ -57,7 +57,7 @@ public class WordComparatorNewScreen {
 		header.setSize(400, 400);
 		header1 = new JLabel(" ", JLabel.CENTER);
 		// header1.setFont(new Font("Calibri", Font.PLAIN, 24));
-//		header1.setSize(400, 400);
+		// header1.setSize(400, 400);
 
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
@@ -161,7 +161,7 @@ public class WordComparatorNewScreen {
 		});
 		submit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				location = text.getText();
 				location1 = text1.getText();
 				System.out.println("Check box is selected " + checkbox.isSelected());
@@ -171,24 +171,25 @@ public class WordComparatorNewScreen {
 					HeaderCompare = false;
 				}
 
-//				header1.setText("Please Wait!"); // use Mutli threading to handle it
+				// header1.setText("Please Wait!"); // use Mutli threading to handle it
 				// this is for html report
-				HtmlReportGeneration report = new HtmlReportGeneration();
+
 				String doclocation1 = location.replace("\\", "\\\\");
 				String doclocation2 = location1.replace("\\", "\\\\");
 				WordComparatorDTO cw = new WordComparatorDTO();
-			
+
 				List<String> temp = cw.wordCompare(doclocation1, doclocation2, HeaderCompare);
 				try {
+					HtmlReportGeneration report = new HtmlReportGeneration();
 					report.reportGeneration(temp);
-					header1.setText("Document comparision done");
+					header1.setText("Document comparision done and result is stored in Result folder created");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					header1.setText(e1.toString());
 					e1.printStackTrace();
 				}
 				// html report code ends here
-//				result(); // this is for result in the same tool
+				// result(); // this is for result in the same tool
 			}
 		});
 

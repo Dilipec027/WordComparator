@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,6 +46,8 @@ public class WordComparatorDTO {
 	List<XWPFParagraph> oneparagraphs;
 	String eol = System.getProperty("line.separator");
 	List<String> mismatch = new ArrayList<String>();
+	static Boolean pictureDifference;
+	static List<String> picpath = new ArrayList<String>();
 
 	// public static void main(String[] args) throws Exception {
 	// ExtractDatafromTable test = new ExtractDatafromTable();
@@ -54,6 +57,10 @@ public class WordComparatorDTO {
 	public List<String> wordCompare(String doclocation1, String doclocation2, Boolean headerFooterCheck) {
 
 		try {
+
+			pictureDifference = false;
+			if (!picpath.isEmpty())
+				picpath.clear();
 			File onefile = new File(doclocation1);
 			FileInputStream onefis = new FileInputStream(onefile.getAbsolutePath());
 
@@ -271,11 +278,18 @@ public class WordComparatorDTO {
 				if (temp == (otherpiclist.size() - 1)) {
 					BufferedImage imag = ImageIO.read(new ByteArrayInputStream(onepic));
 					foldercreation();
-					ImageIO.write(imag, "jpg", new File("Screenshots\\imagefromword" + i + ".jpg"));
+
+					String temp1 = "imagefromword" + System.currentTimeMillis() + ".jpg";
+					// System.out.println(temp1);
+					// File file = new File(temp1);
+					ImageIO.write(imag, "jpg", new File("ResultFolder\\" + temp1));
 					System.out.println("Image is created");
-					String eol = System.getProperty("line.separator");
-					mismatch.add("Picture is not equal" + eol + "pictures in first doc:" + onepiclist.get(i).getData()
-							+ eol + "Check this picture in screenshot folder" + eol);
+					// String eol = System.getProperty("line.separator");
+					// mismatch.add("Picture is not equal" + eol + "pictures in first doc:" +
+					// onepiclist.get(i).getData()
+					// + eol + "Check this picture in screenshot folder" + eol);
+					pictureDifference = true;
+					picpath.add(temp1);
 
 				}
 			}
@@ -456,7 +470,7 @@ public class WordComparatorDTO {
 	public void foldercreation() {
 		String currentDir = System.getProperty("user.dir");
 		System.out.println(currentDir);
-		Path path = Paths.get(currentDir + "\\Screenshots");
+		Path path = Paths.get(currentDir + "\\ResultFolder");
 		if (!Files.exists(path)) {
 			try {
 				Files.createDirectories(path);
