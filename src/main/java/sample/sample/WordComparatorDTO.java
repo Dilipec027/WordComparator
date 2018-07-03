@@ -49,28 +49,37 @@ public class WordComparatorDTO {
 	static Boolean pictureDifference;
 	static List<String> picpath = new ArrayList<String>();
 
+	private Boolean fontCompare;
+	private Boolean underlineCompare;
+	private Boolean bold_italicizedCompare;
+
 	// public static void main(String[] args) throws Exception {
 	// ExtractDatafromTable test = new ExtractDatafromTable();
 	// test.wordCompare();
 	// }
 
-	public List<String> wordCompare(String doclocation1, String doclocation2, Boolean headerFooterCheck) {
+	public List<String> wordCompare(String doclocation1, String doclocation2, Boolean headerFooterCheck,
+			boolean fontCompare, boolean underlineCompare, boolean bold_italicizedCompare, boolean imageCompare) {
 
 		try {
-
+			this.fontCompare = fontCompare;
+			this.underlineCompare = underlineCompare;
+			this.bold_italicizedCompare = bold_italicizedCompare;
 			pictureDifference = false;
+
 			if (!picpath.isEmpty())
 				picpath.clear();
+
 			File onefile = new File(doclocation1);
 			FileInputStream onefis = new FileInputStream(onefile.getAbsolutePath());
-
 			File otherfile = new File(doclocation2);
 			FileInputStream otherfis = new FileInputStream(otherfile.getAbsolutePath());
-
 			onedocument = new XWPFDocument(onefis);
 			otherdocument = new XWPFDocument(otherfis);
-			picComparator();
-			if (headerFooterCheck == true) {
+
+			if (imageCompare)
+				picComparator();
+			if (headerFooterCheck) {
 				headerCompare();
 				footCompare();
 			}
@@ -190,51 +199,58 @@ public class WordComparatorDTO {
 					System.out.println("Current text underline:" + onerun.get(j).getUnderline());
 					System.out.println("Current text underline:" + otherrun.get(j).getUnderline());
 
-					if (onerun.get(j).isBold() != otherrun.get(j).isBold()) {
+					if (bold_italicizedCompare) {
+						if (onerun.get(j).isBold() != otherrun.get(j).isBold()) {
 
-						mismatch.add("Paragraph Line is not Bold in both document" + eol
-								+ "Paragrpah is Bold in first doc :" + onerun.get(j).isBold() + eol
-								+ "Paragraph is Bold in second doc:" + otherrun.get(j).isBold() + eol
-								+ "Paragrpah text:" + otherparagraphs.get(i).getText() + eol + "Line number mismtached"
-								+ pos + eol);
+							mismatch.add("Paragraph Line is not Bold in both document" + eol
+									+ "Paragrpah is Bold in first doc :" + onerun.get(j).isBold() + eol
+									+ "Paragraph is Bold in second doc:" + otherrun.get(j).isBold() + eol
+									+ "Paragrpah text:" + otherparagraphs.get(i).getText() + eol
+									+ "Line number mismtached" + pos + eol);
 
+						}
+
+						if (onerun.get(j).isItalic() != otherrun.get(j).isItalic()) {
+
+							mismatch.add("Paragraph Line is not Italic in both document" + eol
+									+ "Paragrpah is italic in first doc:" + onerun.get(j).isItalic() + eol
+									+ "Paragraph is italic in second doc:" + otherrun.get(j).isItalic() + eol
+									+ "Paragrpah text:" + otherparagraphs.get(i).getText() + eol
+									+ "Line number mismtached" + pos + eol);
+
+						}
 					}
+					if (fontCompare) {
+						if (onerun.get(j).getFontSize() != otherrun.get(j).getFontSize()) {
 
-					if (onerun.get(j).isItalic() != otherrun.get(j).isItalic()) {
+							mismatch.add("Paragraph Line font size is not matching in both document" + eol
+									+ "FontSize  in first doc:" + onerun.get(j).getFontSize() + eol
+									+ "FontSize in second doc:" + otherrun.get(j).getFontSize() + eol
+									+ "Paragrpah text:" + otherparagraphs.get(i).getText() + eol
+									+ "Line number in the paragrpah where  mismtach is:" + pos + eol);
 
-						mismatch.add("Paragraph Line is not Italic in both document" + eol
-								+ "Paragrpah is italic in first doc:" + onerun.get(j).isItalic() + eol
-								+ "Paragraph is italic in second doc:" + otherrun.get(j).isItalic() + eol
-								+ "Paragrpah text:" + otherparagraphs.get(i).getText() + eol + "Line number mismtached"
-								+ pos + eol);
+						}
 
+						if (onerun.get(j).getFontName() != null
+								&& !((onerun.get(j).getFontName().equalsIgnoreCase(otherrun.get(j).getFontName())))) {
+
+							mismatch.add("Paragraph Line Fontname is not matching in both document" + eol
+									+ "Fontname  in first doc" + onerun.get(j).getFontName() + eol
+									+ "Fontname in second doc" + otherrun.get(j).getFontName() + eol + "Paragrpah text:"
+									+ otherparagraphs.get(i).getText() + eol + "Line number mismtached" + pos + eol);
+
+						}
 					}
-					if (onerun.get(j).getFontSize() != otherrun.get(j).getFontSize()) {
+					if (underlineCompare) {
+						if (onerun.get(j).getUnderline() != otherrun.get(j).getUnderline()) {
 
-						mismatch.add("Paragraph Line font size is not matching in both document" + eol
-								+ "FontSize  in first doc:" + onerun.get(j).getFontSize() + eol
-								+ "FontSize in second doc:" + otherrun.get(j).getFontSize() + eol + "Paragrpah text:"
-								+ otherparagraphs.get(i).getText() + eol
-								+ "Line number in the paragrpah where  mismtach is:" + pos + eol);
+							mismatch.add("Paragraph Line is underlined  in one document" + eol
+									+ "underlined  in first doc:" + onerun.get(j).getUnderline() + eol
+									+ "underline in second doc:" + otherrun.get(j).getUnderline() + eol
+									+ "Paragrpah text:" + otherparagraphs.get(i).getText() + eol
+									+ "Line number mismtached" + pos + eol);
 
-					}
-
-					if (onerun.get(j).getFontName() != null
-							&& !((onerun.get(j).getFontName().equalsIgnoreCase(otherrun.get(j).getFontName())))) {
-
-						mismatch.add("Paragraph Line Fontname is not matching in both document" + eol
-								+ "Fontname  in first doc" + onerun.get(j).getFontName() + eol
-								+ "Fontname in second doc" + otherrun.get(j).getFontName() + eol + "Paragrpah text:"
-								+ otherparagraphs.get(i).getText() + eol + "Line number mismtached" + pos + eol);
-
-					}
-					if (onerun.get(j).getUnderline() != otherrun.get(j).getUnderline()) {
-
-						mismatch.add("Paragraph Line is underlined  in one document" + eol + "underlined  in first doc:"
-								+ onerun.get(j).getUnderline() + eol + "underline in second doc:"
-								+ otherrun.get(j).getUnderline() + eol + "Paragrpah text:"
-								+ otherparagraphs.get(i).getText() + eol + "Line number mismtached" + pos + eol);
-
+						}
 					}
 
 				}
@@ -405,55 +421,60 @@ public class WordComparatorDTO {
 								System.out.println("cellCurrent Font Name : " + otherrun.get(m).getFontName());
 								System.out.println("Current text underline:" + onerun.get(m).getUnderline());
 								System.out.println("Current text underline:" + otherrun.get(m).getUnderline());
+								if (bold_italicizedCompare) {
+									if (onerun.get(m).isBold() != otherrun.get(m).isBold()) {
 
-								if (onerun.get(m).isBold() != otherrun.get(m).isBold()) {
+										mismatch.add("cellParagraph Line is not Bold in both document" + eol
+												+ "cellParagraph is Bold in first doc:" + onerun.get(m).isBold() + eol
+												+ "cellParagraph is Bold in second doc:" + otherrun.get(m).isBold()
+												+ eol + "cellParagraph text:" + cellotherparagraphs.get(m).getText()
+												+ eol + "Line number mismtached" + pos + eol);
 
-									mismatch.add("cellParagraph Line is not Bold in both document" + eol
-											+ "cellParagraph is Bold in first doc:" + onerun.get(m).isBold() + eol
-											+ "cellParagraph is Bold in second doc:" + otherrun.get(m).isBold() + eol
-											+ "cellParagraph text:" + cellotherparagraphs.get(m).getText() + eol
-											+ "Line number mismtached" + pos + eol);
+									}
 
+									if (onerun.get(m).isItalic() != otherrun.get(m).isItalic()) {
+
+										mismatch.add("cellParagraph Line is not Italic in both document" + eol
+												+ "cellParagraph is italic in first doc:" + onerun.get(m).isItalic()
+												+ eol + "cellParagraph is italic in second doc:"
+												+ otherrun.get(m).isItalic() + eol + "cellParagraph text:"
+												+ cellotherparagraphs.get(m).getText() + eol + "Line number mismtached"
+												+ pos + eol);
+
+									}
 								}
+								if (fontCompare) {
+									if (onerun.get(m).getFontSize() != otherrun.get(m).getFontSize()) {
 
-								if (onerun.get(m).isItalic() != otherrun.get(m).isItalic()) {
+										mismatch.add("cellParagraph Line font size is not matching in both document"
+												+ eol + "FontSize  in first doc:" + onerun.get(m).getFontSize() + eol
+												+ "FontSize in second doc:" + otherrun.get(m).getFontSize() + eol
+												+ "Paragrpah text:" + cellotherparagraphs.get(m).getText() + eol
+												+ "Line number in the paragrpah where  mismtach is" + pos + eol);
 
-									mismatch.add("cellParagraph Line is not Italic in both document" + eol
-											+ "cellParagraph is italic in first doc:" + onerun.get(m).isItalic() + eol
-											+ "cellParagraph is italic in second doc:" + otherrun.get(m).isItalic()
-											+ eol + "cellParagraph text:" + cellotherparagraphs.get(m).getText() + eol
-											+ "Line number mismtached" + pos + eol);
+									}
 
+									if (onerun.get(m).getFontName() != null && !((onerun.get(m).getFontName()
+											.equalsIgnoreCase(otherrun.get(m).getFontName())))) {
+
+										mismatch.add("cellParagraph Line Fontname is not matching in both document"
+												+ eol + "Fontname  in first doc:" + onerun.get(m).getFontName() + eol
+												+ "Fontname in second doc:" + otherrun.get(m).getFontName() + eol
+												+ "Paragrpah text:" + cellotherparagraphs.get(m).getText() + eol
+												+ "Line number mismtached:" + pos + eol);
+
+									}
 								}
-								if (onerun.get(m).getFontSize() != otherrun.get(m).getFontSize()) {
+								if (underlineCompare) {
+									if (onerun.get(m).getUnderline() != otherrun.get(m).getUnderline()) {
 
-									mismatch.add("cellParagraph Line font size is not matching in both document" + eol
-											+ "FontSize  in first doc:" + onerun.get(m).getFontSize() + eol
-											+ "FontSize in second doc:" + otherrun.get(m).getFontSize() + eol
-											+ "Paragrpah text:" + cellotherparagraphs.get(m).getText() + eol
-											+ "Line number in the paragrpah where  mismtach is" + pos + eol);
+										mismatch.add("Paragraph Line is underlined  in one document" + eol
+												+ "underlined  in first doc:" + onerun.get(m).getUnderline() + eol
+												+ "underline in second doc:" + otherrun.get(m).getUnderline() + eol
+												+ "Paragrpah text:" + otherparagraphs.get(m).getText() + eol
+												+ "Line number mismtached" + pos + eol);
 
-								}
-
-								if (onerun.get(m).getFontName() != null && !((onerun.get(m).getFontName()
-										.equalsIgnoreCase(otherrun.get(m).getFontName())))) {
-
-									mismatch.add("cellParagraph Line Fontname is not matching in both document" + eol
-											+ "Fontname  in first doc:" + onerun.get(m).getFontName() + eol
-											+ "Fontname in second doc:" + otherrun.get(m).getFontName() + eol
-											+ "Paragrpah text:" + cellotherparagraphs.get(m).getText() + eol
-											+ "Line number mismtached:" + pos + eol);
-
-								}
-
-								if (onerun.get(m).getUnderline() != otherrun.get(m).getUnderline()) {
-
-									mismatch.add("Paragraph Line is underlined  in one document" + eol
-											+ "underlined  in first doc:" + onerun.get(m).getUnderline() + eol
-											+ "underline in second doc:" + otherrun.get(m).getUnderline() + eol
-											+ "Paragrpah text:" + otherparagraphs.get(m).getText() + eol
-											+ "Line number mismtached" + pos + eol);
-
+									}
 								}
 
 							}

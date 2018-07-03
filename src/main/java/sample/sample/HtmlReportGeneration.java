@@ -31,10 +31,20 @@ public class HtmlReportGeneration {
 		String report = "<!DOCTYPE html>\r\n" + "<html>\r\n" + "<title>W3.CSS Template</title>\r\n"
 				+ "<meta charset=\"UTF-8\">\r\n"
 				+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\r\n"
-				+ "<link rel=\"stylesheet\" href=\"../StyleSheet/W3.css\">\r\n"
-				+ "<link rel=\"stylesheet\" href=\"../StyleSheet/W3-theme-black.css\">\r\n"
-				+ "<link rel=\"stylesheet\" href=\"../StyleSheet/family=Roboto\">\r\n"
-				+ "<link rel=\"stylesheet\" href=\"../StyleSheet/font-awesome.min.css\">\r\n" + "<style>\r\n"
+				+ "<link rel=\"stylesheet\" href=\"https://www.w3schools.com/w3css/4/w3.css\">\r\n"
+				+ "<link rel=\"stylesheet\" href=\"https://www.w3schools.com/lib/w3-theme-black.css\">\r\n"
+				+ "<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Roboto\">\r\n"
+				+ "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\">\r\n"
+				+ "<style>\r\n"
+
+				// This is for local style sheet
+				// + "<link rel=\"stylesheet\" href=\"../StyleSheet/W3.css\">\r\n"
+				// + "<link rel=\"stylesheet\" href=\"../StyleSheet/W3-theme-black.css\">\r\n"
+				// + "<link rel=\"stylesheet\" href=\"../StyleSheet/family=Roboto\">\r\n"
+				// + "<link rel=\"stylesheet\" href=\"../StyleSheet/font-awesome.min.css\">\r\n"
+				// + "<style>\r\n"
+
+				//
 				+ "html,body,h1,h2,h3,h4,h5,h6 {font-family: \"Roboto\", sans-serif;}\r\n" + ".w3-sidebar {\r\n"
 				+ "  z-index: 3;\r\n" + "  width: 250px;\r\n" + "  top: 43px;\r\n" + "  bottom: 0;\r\n"
 				+ "  height: inherit;\r\n" + "}\r\n" + "</style>\r\n" + "<body>\r\n" + "\r\n" + "\r\n"

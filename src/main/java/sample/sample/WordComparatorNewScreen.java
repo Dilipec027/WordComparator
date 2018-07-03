@@ -30,9 +30,13 @@ public class WordComparatorNewScreen {
 	private JFrame frame;
 	private JFrame frame1;
 	private boolean HeaderCompare;
+	private boolean fontCompare;
+	private boolean underlineCompare;
+	private boolean bold_italicizedCompare;
 	private String location;
 	private String location1;
 	private JLabel header1;
+	private boolean imageCompare;
 
 	// public WordComparatorNewScreen() {
 	// prepareGUI();
@@ -145,8 +149,50 @@ public class WordComparatorNewScreen {
 		c2.gridy = 0;
 		panel2.add(label3, c2);
 
-		JCheckBox checkbox = new JCheckBox("Header/Footer Comparsion needed");
+		JPanel panel3 = new JPanel();
+		panel3.setLayout(new GridBagLayout());
+
+		GridBagConstraints c3 = new GridBagConstraints();
+		JCheckBox checkbox = new JCheckBox("Header/Footer Comparison needed");
+		c3.weightx = 0.25;
+		c3.fill = GridBagConstraints.HORIZONTAL;
+		c3.gridx = 1;
+		c3.gridy = 0;
+		panel3.add(checkbox, c3);
+
+		JCheckBox checkbox1 = new JCheckBox("Font Comparison needed");
+		c3.weightx = 0.25;
+		c3.fill = GridBagConstraints.HORIZONTAL;
+		c3.gridx = 2;
+		c3.gridy = 0;
+		panel3.add(checkbox1, c3);
+
+		JCheckBox checkbox2 = new JCheckBox("Underlined Comparison needed");
+		c3.weightx = 0.25;
+		c3.fill = GridBagConstraints.HORIZONTAL;
+		c3.gridx = 3;
+		c3.gridy = 0;
+		panel3.add(checkbox2, c3);
+
+		JCheckBox checkbox3 = new JCheckBox("Bold/Italicized Comparison needed");
+		c3.weightx = 0.25;
+		c3.fill = GridBagConstraints.HORIZONTAL;
+		c3.gridx = 4;
+		c3.gridy = 0;
+		panel3.add(checkbox3, c3);
+
+		JCheckBox checkbox4 = new JCheckBox("Image Comparison needed");
+		c3.weightx = 0.25;
+		c3.fill = GridBagConstraints.HORIZONTAL;
+		c3.gridx = 5;
+		c3.gridy = 0;
+		panel3.add(checkbox4, c3);
+
 		checkbox.setSelected(true);
+		checkbox1.setSelected(true);
+		checkbox2.setSelected(true);
+		checkbox3.setSelected(true);
+		checkbox4.setSelected(true);
 
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -160,15 +206,39 @@ public class WordComparatorNewScreen {
 			}
 		});
 		submit.addActionListener(new ActionListener() {
+			
+
 			public void actionPerformed(ActionEvent e) {
 
 				location = text.getText();
 				location1 = text1.getText();
-				System.out.println("Check box is selected " + checkbox.isSelected());
+
+				System.out.println("HeaderCheck box is selected " + checkbox.isSelected());
 				if (checkbox.isSelected()) {
 					HeaderCompare = true;
 				} else {
 					HeaderCompare = false;
+				}
+				if (checkbox1.isSelected()) {
+					fontCompare = true;
+				} else {
+					fontCompare = false;
+				}
+				if (checkbox2.isSelected()) {
+					underlineCompare = true;
+				} else {
+					underlineCompare = false;
+				}
+				if (checkbox3.isSelected()) {
+					bold_italicizedCompare = true;
+				} else {
+					bold_italicizedCompare = false;
+				}
+				
+				if (checkbox4.isSelected()) {
+					imageCompare = true;
+				} else {
+					imageCompare = false;
 				}
 
 				// header1.setText("Please Wait!"); // use Mutli threading to handle it
@@ -176,14 +246,15 @@ public class WordComparatorNewScreen {
 
 				String doclocation1 = location.replace("\\", "\\\\");
 				String doclocation2 = location1.replace("\\", "\\\\");
-				WordComparatorDTO cw = new WordComparatorDTO();
-
-				List<String> temp = cw.wordCompare(doclocation1, doclocation2, HeaderCompare);
 				try {
+					WordComparatorDTO cw = new WordComparatorDTO();
+					List<String> temp = cw.wordCompare(doclocation1, doclocation2, HeaderCompare, fontCompare,
+							underlineCompare, bold_italicizedCompare,imageCompare);
+
 					HtmlReportGeneration report = new HtmlReportGeneration();
 					report.reportGeneration(temp);
 					header1.setText("Document comparision done and result is stored in Result folder created");
-				} catch (IOException e1) {
+				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					header1.setText(e1.toString());
 					e1.printStackTrace();
@@ -203,10 +274,9 @@ public class WordComparatorNewScreen {
 		frame.add(header);
 		frame.add(panel);
 		frame.add(panel1);
-		frame.add(checkbox);
+		frame.add(panel3);
 		frame.add(panel2);
 		frame.add(header1);
-
 		// frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -225,49 +295,52 @@ public class WordComparatorNewScreen {
 		return "path not found";
 	}
 
-	public void result() {
-		JTextArea result = new JTextArea();
-		String doclocation1 = location.replace("\\", "\\\\");
-		String doclocation2 = location1.replace("\\", "\\\\");
-		System.out.println(doclocation1);
-		System.out.println(doclocation2);
-		WordComparatorDTO cw = new WordComparatorDTO();
-		List<String> temp;
-		try {
-			temp = cw.wordCompare(doclocation1, doclocation2, HeaderCompare);
-			StringBuffer temp1 = new StringBuffer();
-			System.out.println("temp" + temp);
-			for (String str : temp) {
-				temp1.append(str);
-			}
-			result.setText(temp1.toString());
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			result.setText(e1.toString());
-		}
-		frame.dispose();
-		frame1 = new JFrame("Comparison Result");
-		frame1.setSize(600, 600);
-		Box box1 = Box.createHorizontalBox();
-		box1.add(new JLabel("Please inculde header check always,change in header also might lead to some differences"));
-		Box box = Box.createHorizontalBox();
-		box.add(new JScrollPane(result));
-		Box box2 = Box.createHorizontalBox();
-		JButton returnButton = new JButton("Return");
-		box2.add(returnButton);
-		returnButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame1.dispose();
-				prepareGUI();
-			}
-		});
-		frame1.add(box1, BorderLayout.PAGE_START);
-		frame1.add(box);
-		frame1.add(box2, BorderLayout.PAGE_END);//
-		frame1.setVisible(true);
-		frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	// used for the result displaying in the jframe only
 
-	}
+	// public void result() {
+	// JTextArea result = new JTextArea();
+	// String doclocation1 = location.replace("\\", "\\\\");
+	// String doclocation2 = location1.replace("\\", "\\\\");
+	// System.out.println(doclocation1);
+	// System.out.println(doclocation2);
+	// WordComparatorDTO cw = new WordComparatorDTO();
+	// List<String> temp;
+	// try {
+	// temp = cw.wordCompare(doclocation1, doclocation2, HeaderCompare);
+	// StringBuffer temp1 = new StringBuffer();
+	// System.out.println("temp" + temp);
+	// for (String str : temp) {
+	// temp1.append(str);
+	// }
+	// result.setText(temp1.toString());
+	// } catch (Exception e1) {
+	// // TODO Auto-generated catch block
+	// e1.printStackTrace();
+	// result.setText(e1.toString());
+	// }
+	// frame.dispose();
+	// frame1 = new JFrame("Comparison Result");
+	// frame1.setSize(600, 600);
+	// Box box1 = Box.createHorizontalBox();
+	// box1.add(new JLabel("Please inculde header check always,change in header also
+	// might lead to some differences"));
+	// Box box = Box.createHorizontalBox();
+	// box.add(new JScrollPane(result));
+	// Box box2 = Box.createHorizontalBox();
+	// JButton returnButton = new JButton("Return");
+	// box2.add(returnButton);
+	// returnButton.addActionListener(new ActionListener() {
+	// public void actionPerformed(ActionEvent e) {
+	// frame1.dispose();
+	// prepareGUI();
+	// }
+	// });
+	// frame1.add(box1, BorderLayout.PAGE_START);
+	// frame1.add(box);
+	// frame1.add(box2, BorderLayout.PAGE_END);//
+	// frame1.setVisible(true);
+	// frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	//
+	// }
 
 }
