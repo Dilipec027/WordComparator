@@ -289,20 +289,37 @@ public class WordComparatorDTONew1 {
 		// Picture pic = (Picture) o;
 		// int height = pic.getHeight();
 		// int width = pic.getWidht();
-
+		byte[] onepic = null;
 		List<XWPFPictureData> onepiclist = onedocument.getAllPictures();
 		List<XWPFPictureData> otherpiclist = otherdocument.getAllPictures();
 
-		if (onepiclist.size() != otherpiclist.size()) {
-			mismatch.add("Picture numbers are not equal" + eol);
-			mismatchFirstDoc.add("pictures in first doc:" + onepiclist.size() + eol);
-			mismatchSecondDoc.add("pictures in second doc:" + otherpiclist.size() + eol);
-		} else {
+		// commented this if else to handle the requirement of printing image if picture
+		// size is not equal in both the document
 
-			int temp;
+		// if (onepiclist.size() != otherpiclist.size()) {
+		// mismatch.add("Picture numbers are not equal" + eol);
+		// mismatchFirstDoc.add("pictures in first doc:" + onepiclist.size() + eol);
+		// mismatchSecondDoc.add("pictures in second doc:" + otherpiclist.size() + eol);
+		// } else {
+		try {
+			Integer temp;
+			// used to compare the document if first doc is having 0 pictures
+			if (onepiclist.size() == 0) {
+				for (int j = 0; j < otherpiclist.size(); j++) {
+					byte[] otherpic = otherpiclist.get(j).getData();
+					BufferedImage imag = ImageIO.read(new ByteArrayInputStream(otherpic));
+					foldercreation();
+					String temp1 = "imagefromword" + System.currentTimeMillis() + ".jpg";
+					ImageIO.write(imag, "jpg", new File("ResultFolder\\" + temp1));
+					System.out.println("Image is created");
+					pictureDifference = true;
+					picpath.add(temp1);
+				}
+				
+			}
 			for (int i = 0; i < onepiclist.size(); i++) {
-				byte[] onepic = onepiclist.get(i).getData();
-				temp = 0;
+				onepic = onepiclist.get(i).getData();				
+				temp = 0;				
 				for (int j = 0; j < otherpiclist.size(); j++) {
 					temp = j;
 					byte[] otherpic = otherpiclist.get(j).getData();
@@ -314,7 +331,8 @@ public class WordComparatorDTONew1 {
 					}
 				}
 
-				if (temp == (otherpiclist.size() - 1)) {
+				if (temp == (otherpiclist.size() - 1) || otherpiclist.size() == 0) {
+
 					BufferedImage imag = ImageIO.read(new ByteArrayInputStream(onepic));
 					foldercreation();
 
@@ -329,10 +347,23 @@ public class WordComparatorDTONew1 {
 					// + eol + "Check this picture in screenshot folder" + eol);
 					pictureDifference = true;
 					picpath.add(temp1);
-
 				}
+
 			}
+		} catch (Exception e) {
+			// added to get the image if the document one is having 0 pictures
+
+			// added code to get compare the pictures if the size of picture is not equal
+			BufferedImage imag = ImageIO.read(new ByteArrayInputStream(onepic));
+			foldercreation();
+			String temp1 = "imagefromword" + System.currentTimeMillis() + ".jpg";
+			ImageIO.write(imag, "jpg", new File("ResultFolder\\" + temp1));
+			System.out.println("Image is created");
+			pictureDifference = true;
+			picpath.add(temp1);
+
 		}
+		// }
 	}
 
 	public String tableComparator() {
