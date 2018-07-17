@@ -24,7 +24,7 @@ public class HtmlReportGenerationNew {
 		if (WordComparatorDTONew1.pictureDifference == true) {
 			for (String str : WordComparatorDTONew1.picpath) {
 				temp.append(" <h1 class=\"w3-text-teal\">Difference Details</h1>\r\n" + " <p>"
-						+ "Below picture is missing in second documnet" + "</p>\r\n" + "<img src=" + str
+						+ "Below picture is mismatched" + "</p>\r\n" + "<img src=" + str
 						+ "  width=\"300\" height=\"300\">" + "\r\n");
 			}
 		}
