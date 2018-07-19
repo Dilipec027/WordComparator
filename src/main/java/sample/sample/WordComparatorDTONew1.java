@@ -174,12 +174,33 @@ public class WordComparatorDTONew1 {
 			System.out.println("paragrpahstyle:" + onestyle);
 			System.out.println("paragrpahstyle:" + otherstyle);
 
+			// Added getName to fix a bug raised by Das
+//			if (onestyle.getName() != otherstyle.getName()
+//					&& (onestyle.getName() == otherstyle.getName() && onestyle.getName() != null)) {
+//
+//				mismatch.add("Style is not equal in the paragrpah" + eol);
+//				mismatchFirstDoc.add("style in First doc:" + onestyle.getName() + eol);
+//				mismatchSecondDoc.add("style in Seond Doc :" + otherstyle.getName() + eol + "Paragrpah text:"
+//						+ otherparagraphs.get(i).getText() + eol);
+//			}
+			
 			if (onestyle != otherstyle) {
-
-				mismatch.add("Style is not equal in the paragrpah" + eol);
-				mismatchFirstDoc.add("style in First doc:" + onestyle + eol);
-				mismatchSecondDoc.add("style in Seond Doc :" + otherstyle + eol + "Paragrpah text:"
-						+ otherparagraphs.get(i).getText() + eol);
+				if ((onestyle != null && otherstyle == null) || (onestyle == null && otherstyle != null)
+						|| (onestyle != null && otherstyle != null)) {
+					if (!onestyle.getName().equalsIgnoreCase(otherstyle.getName())) {
+						System.out.println(onestyle.getName());
+						System.out.println(otherstyle.getName());
+						mismatch.add("Style is not equal in the cellparagrpah" + eol);
+						mismatchFirstDoc.add("style in First doc:" + onestyle.getName() + eol);
+						mismatchSecondDoc.add("style in Seond Doc :" + otherstyle.getName() + eol
+								+ "cellParagraph text:" + otherparagraphs.get(i).getText() + eol);
+					}
+				} else {
+					mismatch.add("Style is not equal in the cellparagrpah" + eol);
+					mismatchFirstDoc.add("style in First doc:" + onestyle + eol);
+					mismatchSecondDoc.add("style in Seond Doc :" + otherstyle + eol + "cellParagraph text:"
+							+ otherparagraphs.get(i).getText() + eol);
+				}
 			}
 
 			System.out.println("Number of Line for the current Paragrpahs:" + oneparagraphs.get(i).getRuns().size());
@@ -315,11 +336,11 @@ public class WordComparatorDTONew1 {
 					pictureDifference = true;
 					picpath.add(temp1);
 				}
-				
+
 			}
 			for (int i = 0; i < onepiclist.size(); i++) {
-				onepic = onepiclist.get(i).getData();				
-				temp = 0;				
+				onepic = onepiclist.get(i).getData();
+				temp = 0;
 				for (int j = 0; j < otherpiclist.size(); j++) {
 					temp = j;
 					byte[] otherpic = otherpiclist.get(j).getData();
@@ -433,12 +454,26 @@ public class WordComparatorDTONew1 {
 						System.out.println("cellParagraphstyle:" + onestyle);
 						System.out.println("cellparagrpahstyle:" + otherstyle);
 
-						if (onestyle != otherstyle) {
+						// Added this second if and third if to handle the das defect
+						// about style
 
-							mismatch.add("Style is not equal in the paragrpah" + eol);
-							mismatchFirstDoc.add("style in First doc:" + onestyle + eol);
-							mismatchSecondDoc.add("style in Seond Doc :" + otherstyle + eol + "cellParagraph text:"
-									+ cellotherparagraphs.get(l).getText() + eol);
+						if (onestyle != otherstyle) {
+							if ((onestyle != null && otherstyle == null) || (onestyle == null && otherstyle != null)
+									|| (onestyle != null && otherstyle != null)) {
+								if (!onestyle.getName().equalsIgnoreCase(otherstyle.getName())) {
+									System.out.println(onestyle.getName());
+									System.out.println(otherstyle.getName());
+									mismatch.add("Style is not equal in the cellparagrpah" + eol);
+									mismatchFirstDoc.add("style in First doc:" + onestyle.getName() + eol);
+									mismatchSecondDoc.add("style in Seond Doc :" + otherstyle.getName() + eol
+											+ "cellParagraph text:" + cellotherparagraphs.get(l).getText() + eol);
+								}
+							} else {
+								mismatch.add("Style is not equal in the cellparagrpah" + eol);
+								mismatchFirstDoc.add("style in First doc:" + onestyle + eol);
+								mismatchSecondDoc.add("style in Seond Doc :" + otherstyle + eol + "cellParagraph text:"
+										+ cellotherparagraphs.get(l).getText() + eol);
+							}
 						}
 
 						System.out.println("Number of Line for the current cellParagraph:"
